@@ -10,6 +10,7 @@ import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
+import org.activiti.engine.impl.util.ReflectUtil;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
 import org.activiti.rest.editor.model.ModelEditorJsonRestResource;
@@ -127,7 +128,7 @@ public class ModelController {
 
     @RequestMapping(value = "/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     public String getStencilset() {
-        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
+        InputStream stencilsetStream = ReflectUtil.getResourceAsStream("tgtools/activiti/stencilset.json");
         try {
             return IOUtils.toString(stencilsetStream, "utf-8");
         } catch (Exception e) {

@@ -29,7 +29,6 @@ public class ResourceController {
             file = file.substring(0, file.indexOf("?"));
         }
         file ="tgtools/activiti/resource/"+file;
-        System.out.println("file:"+file);
         try {
             copyAndClose(ReflectUtil.getResourceAsStream(file), pResponse.getOutputStream());
         } catch (Exception e) {
