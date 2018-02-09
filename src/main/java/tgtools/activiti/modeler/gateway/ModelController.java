@@ -48,12 +48,12 @@ public class ModelController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RequestMapping(value = "/model",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model", method = {RequestMethod.GET})
     ModelAndView model() {
         return new ModelAndView("act/model/model");
     }
 
-    @RequestMapping(value ="/model/list",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model/list", method = {RequestMethod.GET})
     PageUtils list(int offset, int limit) {
         List<Model> list = repositoryService.createModelQuery().listPage(offset
                 , limit);
@@ -63,7 +63,7 @@ public class ModelController {
     }
 
     @RequestMapping("/model/add")
-    public void newModel(HttpServletResponse response) throws UnsupportedEncodingException {
+    public ResponseCode newModel(HttpServletResponse response) throws UnsupportedEncodingException {
 
         //初始化一个空模型
         Model model = repositoryService.newModel();
@@ -94,14 +94,13 @@ public class ModelController {
                 "http://b3mn.org/stencilset/bpmn2.0#");
         editorNode.put("stencilset", stencilSetNode);
         repositoryService.addModelEditorSource(id, editorNode.toString().getBytes("utf-8"));
-        try {
-            response.sendRedirect("/modeler.html?modelId=" + id);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResponseCode rc=ResponseCode.ok(id);
+        rc.put("success",true);
+        rc.put("data",id);
+        return rc;
     }
 
-    @RequestMapping(value = "/model/{modelId}/json",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model/{modelId}/json", method = {RequestMethod.GET})
     public ObjectNode getEditorJson(@PathVariable String modelId) {
         ObjectNode modelNode = null;
         Model model = repositoryService.getModel(modelId);
@@ -133,19 +132,18 @@ public class ModelController {
             return IOUtils.toString(stencilsetStream, "utf-8");
         } catch (Exception e) {
             throw new ActivitiException("Error while loading stencil set", e);
-        }finally {
-            if(null!=stencilsetStream)
-            {
+        } finally {
+            if (null != stencilsetStream) {
                 try {
                     stencilsetStream.close();
                 } catch (IOException e) {
-                    LOGGER.error("stencilsetStream 释放出错；原因："+e.getMessage(),e);
+                    LOGGER.error("stencilsetStream 释放出错；原因：" + e.getMessage(), e);
                 }
             }
         }
     }
 
-    @RequestMapping(value ="/model/edit/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/model/edit/{id}", method = RequestMethod.GET)
     public void edit(HttpServletResponse response, @PathVariable("id") String id) {
         try {
             response.sendRedirect("/modeler.html?modelId=" + id);
@@ -154,13 +152,13 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value ="/model/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/model/{id}", method = RequestMethod.DELETE)
     public ResponseCode remove(@PathVariable("id") String id) {
         repositoryService.deleteModel(id);
         return ResponseCode.ok();
     }
 
-    @RequestMapping(value ="/model/deploy/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/model/deploy/{id}", method = RequestMethod.POST)
     public ResponseCode deploy(@PathVariable("id") String id) throws Exception {
 
         //获取模型
@@ -191,7 +189,7 @@ public class ModelController {
         return ResponseCode.ok();
     }
 
-    @RequestMapping(value ="/model/batchRemove",method = RequestMethod.POST)
+    @RequestMapping(value = "/model/batchRemove", method = RequestMethod.POST)
     public ResponseCode batchRemove(@RequestParam("ids[]") String[] ids) {
         for (String id : ids) {
             repositoryService.deleteModel(id);
@@ -239,7 +237,7 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value="/model/export/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/model/export/{id}", method = RequestMethod.GET)
     public void exportToXml(@PathVariable("id") String id, HttpServletResponse response) {
         try {
             Model modelData = repositoryService.getModel(id);
