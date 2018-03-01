@@ -9,6 +9,8 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.util.ReflectUtil;
 import org.activiti.engine.repository.Deployment;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tgtools.web.entity.GridData;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -53,16 +56,19 @@ public class ModelController {
         return new ModelAndView("act/model/model");
     }
 
-    @RequestMapping(value = "/model/list", method = {RequestMethod.GET})
-    PageUtils list(int offset, int limit) {
-        List<Model> list = repositoryService.createModelQuery().listPage(offset
-                , limit);
-        int total = (int) repositoryService.createModelQuery().count();
-        PageUtils pageUtil = new PageUtils(list, total);
-        return pageUtil;
+    @RequestMapping(value = "/model/list", method = {RequestMethod.POST})
+    public GridData list(@RequestParam("pageIndex") int pIndex, @RequestParam("pageSize") int pPageSize) {
+        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
+        long count = processEngine.getRepositoryService().createModelQuery().count();
+        List<Model> models = processEngine.getRepositoryService().createModelQuery().orderByCreateTime().asc().listPage((pIndex*pPageSize+1), pPageSize);
+        GridData entity = new GridData();
+        entity.setTotalRows((int) count);
+        entity.setCurPage(1);
+        entity.setData(models);
+        return entity;
     }
 
-    @RequestMapping("/model/add")
+    @RequestMapping(value = "/model/add", method = {RequestMethod.GET})
     public ResponseCode newModel(HttpServletResponse response) throws UnsupportedEncodingException {
 
         //初始化一个空模型
@@ -152,7 +158,7 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value = "/model/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/model/remove/{id}", method = RequestMethod.POST)
     public ResponseCode remove(@PathVariable("id") String id) {
         repositoryService.deleteModel(id);
         return ResponseCode.ok();

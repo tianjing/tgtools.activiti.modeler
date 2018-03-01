@@ -6,7 +6,7 @@
 <!--source https://github.com/tianjing/tgtools.activiti.modeler.git -->
     <groupId>tgtools</groupId>
     <artifactId>tgtools.activiti.modeler</artifactId>
-    <version>5.22.0.1</version>
+    <version>5.22.0.2</version>
 
     <properties>
         <activiti.version>5.22.0</activiti.version>
@@ -87,6 +87,18 @@
             <artifactId>tomcat-embed-core</artifactId>
             <version>8.5.16</version>
         </dependency>
+        <!--tgtools 工具包 开始 -->
+        <dependency>
+            <groupId>tgtools</groupId>
+            <artifactId>tgtools.core</artifactId>
+            <version>1.0.272</version>
+        </dependency>
+        <dependency>
+            <groupId>tgtools</groupId>
+            <artifactId>tgtools.web</artifactId>
+            <version>1.0.321</version>
+        </dependency>
+        <!--tgtools 工具包 结束 -->
     </dependencies>
     <repositories>
         <repository>
