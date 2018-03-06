@@ -6,7 +6,7 @@
 <!--source https://github.com/tianjing/tgtools.activiti.modeler.git -->
     <groupId>tgtools</groupId>
     <artifactId>tgtools.activiti.modeler</artifactId>
-    <version>5.22.0.3</version>
+    <version>5.22.0.4</version>
 
     <properties>
         <activiti.version>5.22.0</activiti.version>
@@ -23,11 +23,6 @@
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-spring</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-modeler</artifactId>
             <version>${activiti.version}</version>
         </dependency>
         <dependency>
