@@ -58,7 +58,7 @@ public class ModelController {
     public GridData list(@RequestParam("pageIndex") int pIndex, @RequestParam("pageSize") int pPageSize) {
         ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
         long count = processEngine.getRepositoryService().createModelQuery().count();
-        List<Model> models = processEngine.getRepositoryService().createModelQuery().orderByCreateTime().asc().listPage((pIndex*pPageSize+1), pPageSize);
+        List<Model> models = processEngine.getRepositoryService().createModelQuery().orderByCreateTime().asc().listPage((pIndex*pPageSize), pPageSize);
         GridData entity = new GridData();
         entity.setTotalRows((int) count);
         entity.setCurPage(1);
