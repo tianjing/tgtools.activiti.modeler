@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ProcessEngine;
@@ -15,7 +14,6 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.util.ReflectUtil;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
-import org.activiti.rest.editor.model.ModelEditorJsonRestResource;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
@@ -34,17 +32,17 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.activiti.editor.constants.ModelDataJsonConstants.*;
-
 /**
  * activiti 模型设计器处理类
  */
 @RequestMapping("/activiti")
 @RestController
 public class ModelController {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(ModelEditorJsonRestResource.class);
-
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ModelController.class);
+    String MODEL_ID = "modelId";
+    String MODEL_NAME = "name";
+    String MODEL_REVISION = "revision";
+    String MODEL_DESCRIPTION = "description";
     @Autowired
     private RepositoryService repositoryService;
 
@@ -80,9 +78,9 @@ public class ModelController {
         String key = "process";
 
         ObjectNode modelNode = objectMapper.createObjectNode();
-        modelNode.put(ModelDataJsonConstants.MODEL_NAME, name);
-        modelNode.put(ModelDataJsonConstants.MODEL_DESCRIPTION, description);
-        modelNode.put(ModelDataJsonConstants.MODEL_REVISION, revision);
+        modelNode.put(MODEL_NAME, name);
+        modelNode.put(MODEL_DESCRIPTION, description);
+        modelNode.put(MODEL_REVISION, revision);
 
         model.setName(name);
         model.setKey(key);
