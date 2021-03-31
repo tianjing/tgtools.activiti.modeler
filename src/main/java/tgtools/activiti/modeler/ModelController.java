@@ -12,7 +12,6 @@ import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
-import org.activiti.rest.editor.model.ModelEditorJsonRestResource;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
@@ -25,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
@@ -39,7 +39,9 @@ import static org.activiti.editor.constants.ModelDataJsonConstants.*;
 @RequestMapping("/activiti")
 @RestController
 public class ModelController {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(ModelEditorJsonRestResource.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(ModelController.class);
+    protected MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
+
 
     @Autowired
     private RepositoryService repositoryService;
@@ -47,12 +49,12 @@ public class ModelController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RequestMapping(value = "/model",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model", method = {RequestMethod.GET})
     ModelAndView model() {
         return new ModelAndView("act/model/model");
     }
 
-    @RequestMapping(value ="/model/list",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model/list", method = {RequestMethod.GET})
     PageUtils list(int offset, int limit) {
         List<Model> list = repositoryService.createModelQuery().listPage(offset
                 , limit);
@@ -100,7 +102,7 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value = "/model/{modelId}/json",method = {RequestMethod.GET})
+    @RequestMapping(value = "/model/{modelId}/json", method = {RequestMethod.GET})
     public ObjectNode getEditorJson(@PathVariable String modelId) {
         ObjectNode modelNode = null;
         Model model = repositoryService.getModel(modelId);
@@ -132,19 +134,18 @@ public class ModelController {
             return IOUtils.toString(stencilsetStream, "utf-8");
         } catch (Exception e) {
             throw new ActivitiException("Error while loading stencil set", e);
-        }finally {
-            if(null!=stencilsetStream)
-            {
+        } finally {
+            if (null != stencilsetStream) {
                 try {
                     stencilsetStream.close();
                 } catch (IOException e) {
-                    LOGGER.error("stencilsetStream 释放出错；原因："+e.getMessage(),e);
+                    LOGGER.error("stencilsetStream 释放出错；原因：" + e.getMessage(), e);
                 }
             }
         }
     }
 
-    @RequestMapping(value ="/model/edit/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/model/edit/{id}", method = RequestMethod.GET)
     public void edit(HttpServletResponse response, @PathVariable("id") String id) {
         try {
             response.sendRedirect("/modeler.html?modelId=" + id);
@@ -153,13 +154,13 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value ="/model/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/model/{id}", method = RequestMethod.DELETE)
     public ResponseCode remove(@PathVariable("id") String id) {
         repositoryService.deleteModel(id);
         return ResponseCode.ok();
     }
 
-    @RequestMapping(value ="/model/deploy/{id}",method = RequestMethod.POST)
+    @RequestMapping(value = "/model/deploy/{id}", method = RequestMethod.POST)
     public ResponseCode deploy(@PathVariable("id") String id) throws Exception {
 
         //获取模型
@@ -190,7 +191,7 @@ public class ModelController {
         return ResponseCode.ok();
     }
 
-    @RequestMapping(value ="/model/batchRemove",method = RequestMethod.POST)
+    @RequestMapping(value = "/model/batchRemove", method = RequestMethod.POST)
     public ResponseCode batchRemove(@RequestParam("ids[]") String[] ids) {
         for (String id : ids) {
             repositoryService.deleteModel(id);
@@ -238,7 +239,7 @@ public class ModelController {
         }
     }
 
-    @RequestMapping(value="/model/export/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/model/export/{id}", method = RequestMethod.GET)
     public void exportToXml(@PathVariable("id") String id, HttpServletResponse response) {
         try {
             Model modelData = repositoryService.getModel(id);

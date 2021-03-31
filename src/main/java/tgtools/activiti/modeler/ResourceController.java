@@ -4,6 +4,7 @@ import org.activiti.engine.impl.util.ReflectUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Closeable;
@@ -21,14 +22,18 @@ import java.io.OutputStream;
 @RestController
 public class ResourceController {
 
+    protected MimetypesFileTypeMap mimetypesFileTypeMap =new MimetypesFileTypeMap();
+
+
     @RequestMapping(value = "/editor-app")
     public void get(HttpServletRequest pRequest, HttpServletResponse pResponse) {
         String url =pRequest.getRequestURI();
         String file =url.substring(url.indexOf("editor-app"));
         file=file.substring(0,file.indexOf("?"));
         file ="tgtools/activiti/resource/"+file;
-        System.out.println("file:"+file);
+
         try {
+            pResponse.setContentType(mimetypesFileTypeMap.getContentType(file));
             copyAndClose(ReflectUtil.getResourceAsStream(file), pResponse.getOutputStream());
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,6 +43,7 @@ public class ResourceController {
     @RequestMapping(value = "/modeler.html")
     public void getmodeler(HttpServletRequest pRequest, HttpServletResponse pResponse) {
         try {
+            pResponse.setContentType(mimetypesFileTypeMap.getContentType("modeler.html"));
             copyAndClose(ReflectUtil.getResourceAsStream("tgtools/activiti/resource/modeler.html"), pResponse.getOutputStream());
         } catch (Exception e) {
             e.printStackTrace();

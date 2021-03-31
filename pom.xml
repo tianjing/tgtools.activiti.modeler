@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.tianjing</groupId>
     <artifactId>tgtools.activiti.modeler</artifactId>
-    <version>5.22.0.5</version>
+    <version>5.22.0.6</version>
 
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -149,12 +149,14 @@
             <artifactId>batik-svggen</artifactId>
             <version>1.7</version>
         </dependency>
-        <!-- tomcat-->
+        <!-- servlet-->
         <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>8.5.16</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <optional>true</optional>
         </dependency>
+
         <!--tgtools 工具包 开始 -->
         <dependency>
             <groupId>com.github.tianjing</groupId>
@@ -164,9 +166,15 @@
         <dependency>
             <groupId>com.github.tianjing</groupId>
             <artifactId>tgtools.web</artifactId>
-            <version>1.0.326</version>
+            <version>1.0.329</version>
         </dependency>
         <!--tgtools 工具包 结束 -->
+
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
