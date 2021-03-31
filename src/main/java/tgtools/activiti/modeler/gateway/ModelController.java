@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import tgtools.web.entity.GridData;
 
+import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.Map;
 @RequestMapping("/activiti")
 @RestController
 public class ModelController {
+
     protected static final Logger LOGGER = LoggerFactory.getLogger(ModelController.class);
     String MODEL_ID = "modelId";
     String MODEL_NAME = "name";

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.tianjing</groupId>
     <artifactId>tgtools.activiti.modeler</artifactId>
-    <version>5.22.0.6</version>
+    <version>5.22.0.7</version>
 
 
     <name>${project.groupId}:${project.artifactId}</name>
