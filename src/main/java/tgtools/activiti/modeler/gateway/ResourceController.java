@@ -19,25 +19,31 @@ import java.io.OutputStream;
  */
 @RequestMapping("/activiti/resource")
 public class ResourceController {
-    protected MimetypesFileTypeMap mimetypesFileTypeMap =new MimetypesFileTypeMap();
-
+    protected MimetypesFileTypeMap mimetypesFileTypeMap = new MimetypesFileTypeMap();
 
 
     @RequestMapping(value = "/editor-app/**")
     public void get(HttpServletRequest pRequest, HttpServletResponse pResponse) {
-        String url =pRequest.getRequestURI();
-        String file =url.substring(url.indexOf("editor-app"));
-        int end=file.indexOf("?");
-        if(end>=0) {
+        String url = pRequest.getRequestURI();
+        String file = url.substring(url.indexOf("editor-app"));
+        int end = file.indexOf("?");
+        if (end >= 0) {
             file = file.substring(0, file.indexOf("?"));
         }
-        file ="tgtools/activiti/resource/"+file;
+        file = "tgtools/activiti/resource/" + file;
         try {
-            pResponse.setContentType(mimetypesFileTypeMap.getContentType(file));
+            pResponse.setContentType(getContentType(file));
             copyAndClose(ReflectUtil.getResourceAsStream(file), pResponse.getOutputStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected String getContentType(String pFile) {
+        if (pFile.endsWith(".xml")) {
+            return "application/xml";
+        }
+        return mimetypesFileTypeMap.getContentType(pFile);
     }
 
     @RequestMapping(value = "/modeler.html")
